@@ -6,14 +6,14 @@ import java.io.InputStream;
 public class Mapa extends Stream{
 
 	public static void main(String[] args) throws Exception {
-		imprimirMapa("sample533.ts");
+		imprimirMapa("sampleA.ts");
 	}
 	
 	private static void imprimirMapa(String ts) throws Exception{
 		InputStream input = getInputStream(ts);
 		byte[] buffer = new byte[188];
 		
-		while(hayPaquete(input, buffer)){
+		while(leerPaquete(input, buffer)){
 			imprimirPaquete(buffer);
 		}
 		
@@ -45,16 +45,9 @@ public class Mapa extends Stream{
 		return b == 0x0047;
 	}
 	
-	private static boolean esPAT(int pid) {
-		return pid == 0x0000;
-	}
-	
 	private static boolean esNull(int pid) {
 		return pid == 0x1fff;
-	}	
-
-	private static int pid(byte[] buffer) {		
-		return retNum(buffer, 1) & 0x1fff;
-	}	
+	}
+	
 
 }

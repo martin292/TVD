@@ -5,33 +5,32 @@ import java.io.InputStream;
 public class ProgramScanner extends Stream{
 
 	public static void main(String[] args) throws Exception {
-		InputStream input = getInputStream("sample533.ts");
+		InputStream input = getInputStream("sampleA.ts");
 		byte[] buffer = new byte[188];
 		
-		while(hayPaquete(input, buffer)){
-			imprimirPMT(buffer);
+		while(leerPaquete(input, buffer)){
+			if(esPAT(pid(buffer))){
+				imprimirPMT(buffer);
+			}
 		}
-		
 		input.close();
 	}
 	
 	private static void imprimirPMT(byte[] buffer){
-		int sectionLength = 0;		
-		
-		if(buffer[5] == 0x00){			
-			sectionLength = getSectionLength(buffer, 7);
-		}else{
-			sectionLength = getSectionLength(buffer, 6 + buffer[5]);
-		}
+		int sectionLength = getSectionLength(buffer, 6); //
 		
 		int n = (sectionLength - 9)/4;
+		
 		imprimirProgNumYPID(buffer, n);
 	}
 
 	private static void imprimirProgNumYPID(byte[] buffer, int n) {
-		int x = 14;
-		for(int i = 0; i<n; i++){
-			System.out.println("ProgramNumber: " + getProgramNumber(buffer, x) + " -> PID: " + getPidPMT(buffer, x+2));
+		int x = 13;
+		for(int i = 0; i<n; i++){			
+			System.out.printf("ProgramNumber: %4X\n", getProgramNumber(buffer, x));
+			System.out.printf("Pid: %4X\n", getPidPMT(buffer, x+2));
+			System.out.println(" ");
+			
 			x = x+4;				
 		}
 	}
@@ -49,3 +48,5 @@ public class ProgramScanner extends Stream{
 	}	
 	
 }
+
+
